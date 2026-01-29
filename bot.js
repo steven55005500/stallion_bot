@@ -49,7 +49,7 @@ async function sendAlert(type, data) {
         let message = `${emoji} **STALLION ${type} ALERT** ${emoji}\n`;
         message += `━━━━━━━━━━━━━━━━━━\n\n`;
         
-        message += `📈 **Current Price:** ${displayPrice} USDT\n`;
+        message += `📈 **Current STN Token Price:** ${displayPrice} USDT\n`;
         message += `🌍 **Market Cap:** $${marketCap}\n\n`;
         
         if (isBuy) {
