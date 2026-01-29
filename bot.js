@@ -4,10 +4,12 @@ const { Telegraf } = require('telegraf');
 
 const { BOT_TOKEN, CONTRACT_ADDRESS, CHANNEL_ID, RPC_URL } = process.env;
 
+// STN Token Address (Site wala price yahan se aayega)
+const STN_TOKEN = "0x94Abf62b41f815448eEDBE9eC10f10576D9D6004";
+
 const bot = new Telegraf(BOT_TOKEN);
 const provider = new ethers.JsonRpcProvider(RPC_URL);
 
-// Full ABI
 const ABI = [
     "event Bought(uint256 tdate, address indexed user, address indexed token, uint256 usdtIn, uint256 tokenOut, uint256 price)",
     "event Sold(uint256 tdate, address indexed user, address indexed token, uint256 tokenIn, uint256 usdtOut, uint256 price)",
@@ -17,22 +19,24 @@ const ABI = [
 
 const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
 
-// Formatter functions with safety checks
 const f18 = (val) => val ? parseFloat(ethers.formatUnits(val, 18)).toFixed(4) : "0.0000";
 const f6 = (val) => val ? parseFloat(ethers.formatUnits(val, 6)).toFixed(2) : "0.00";
 
 async function sendAlert(type, data) {
     try {
-        // Fetch fresh data from contract
-        const fullData = await contract.getTokenFullData(data.token);
-        const burnData = await contract.getBurnToken(data.token);
+        // Fresh data fetch kar rahe hain STN token address use karke
+        const fullData = await contract.getTokenFullData(STN_TOKEN);
+        const burnData = await contract.getBurnToken(STN_TOKEN);
 
         const isBuy = type === 'BUY';
         const emoji = isBuy ? '🚀' : '🔻';
-        const symbol = fullData.symbol || "TOKEN";
+        const symbol = "STN"; // Fixed symbol as per your token
         
         let message = `${emoji} **STALLION ${type} ALERT** ${emoji}\n`;
         message += `━━━━━━━━━━━━━━━━━━\n\n`;
+        
+        // --- PRICE SECTION ---
+        message += `📈 **Current Price:** ${f18(fullData.price)} USDT\n\n`;
         
         if (isBuy) {
             message += `💰 **Spent:** ${f6(data.usdtIn)} USDT\n`;
@@ -42,7 +46,7 @@ async function sendAlert(type, data) {
             message += `💰 **Received:** ${f6(data.usdtOut)} USDT\n`;
         }
 
-        // message += `📈 **Price:** ${f18(data.price)} USDT\n\n`;
+        message += `━━━━━━━━━━━━━━━━━━\n`;
         message += `💎 **Total Minted:** ${f18(fullData.minted)} ${symbol}\n`;
         message += `🔥 **Total Burned:** ${f18(burnData.burntokens)} ${symbol}\n`;
         message += `💧 **Liquidity Pool:** ${f6(fullData.usdtLiquidity)} USDT\n`;
@@ -54,25 +58,24 @@ async function sendAlert(type, data) {
         await bot.telegram.sendMessage(CHANNEL_ID, message, { 
             parse_mode: 'Markdown',
             reply_markup: {
-                inline_keyboard: [[{ text: "🌐 Trade Now", url: "https://stallion.exchange" }]]
+                inline_keyboard: [[{ text: "🌐 Visit Website", url: "https://stallion.exchange" }]]
             }
         });
-        console.log(`✅ ${type} alert sent to Telegram!`);
+        console.log(`✅ ${type} alert sent with STN Live Price!`);
     } catch (err) { 
         console.log(`❌ Alert Error (${type}):`, err.message);
-        // Fallback: Agar contract data fail ho jaye, tab bhi basic alert bhej do
-        const simpleMsg = `🚨 **STALLION ${type} DETECTED!**\n\nUser: \`${data.user.substring(0,6)}...\`\n🔗 [View on PolygonScan](https://polygonscan.com/tx/${data.txHash})`;
+        const simpleMsg = `🚨 **STALLION ${type} DETECTED!**\n\nCheck on PolygonScan: [Click Here](https://polygonscan.com/tx/${data.txHash})`;
         await bot.telegram.sendMessage(CHANNEL_ID, simpleMsg, { parse_mode: 'Markdown' });
     }
 }
 
 async function startBot() {
     try {
-        console.log("--- STALLION PRO BOT STARTUP ---");
+        console.log("--- STALLION PRO BOT STARTUP (STN PRICE MODE) ---");
         const block = await provider.getBlockNumber();
         console.log("🟢 RPC Connected! Block:", block);
 
-        await bot.telegram.sendMessage(CHANNEL_ID, "🤖 **Stallion Monitoring System Online!**");
+        await bot.telegram.sendMessage(CHANNEL_ID, "🤖 **Stallion Monitoring System Online!**\nTracking STN Live Price...");
         
         let lastBlock = block - 5; 
 
@@ -82,10 +85,8 @@ async function startBot() {
                 if (currentBlock > lastBlock) {
                     console.log(`🔎 Scanning: ${lastBlock + 1} to ${currentBlock}`);
                     
-                    // Filter events and map them correctly to avoid "null" arguments
                     const buyEvents = await contract.queryFilter("Bought", lastBlock + 1, currentBlock);
                     for (let event of buyEvents) {
-                        console.log("🔥 NEW BUY!");
                         const args = event.args;
                         await sendAlert('BUY', { 
                             user: args.user, 
@@ -99,7 +100,6 @@ async function startBot() {
 
                     const sellEvents = await contract.queryFilter("Sold", lastBlock + 1, currentBlock);
                     for (let event of sellEvents) {
-                        console.log("🔥 NEW SELL!");
                         const args = event.args;
                         await sendAlert('SELL', { 
                             user: args.user, 
@@ -113,11 +113,7 @@ async function startBot() {
                     lastBlock = currentBlock;
                 }
             } catch (err) { 
-                if (err.message.includes("timeout")) {
-                    console.log("⚠️ RPC Timeout... Waiting for next cycle.");
-                } else {
-                    console.log("❌ Loop Error:", err.message);
-                }
+                console.log("❌ Loop Error:", err.message);
             }
         }, 12000); 
 
