@@ -24,26 +24,30 @@ const f6 = (val) => val ? parseFloat(ethers.formatUnits(val, 6)).toFixed(2) : "0
 
 async function sendAlert(type, data) {
     try {
-        // Fresh data fetch kar rahe hain STN token address use karke
         const fullData = await contract.getTokenFullData(STN_TOKEN);
         const burnData = await contract.getBurnToken(STN_TOKEN);
 
         const isBuy = type === 'BUY';
         const emoji = isBuy ? '🚀' : '🔻';
-        const symbol = "STN"; // Fixed symbol as per your token
+        const symbol = "STN";
         
+        // FIX: Agar fullData.price 0 hai, toh transaction wala price use karo
+        let displayPrice = f18(fullData.price);
+        if (displayPrice === "0.0000") {
+            displayPrice = f18(data.price);
+        }
+
         let message = `${emoji} **STALLION ${type} ALERT** ${emoji}\n`;
         message += `━━━━━━━━━━━━━━━━━━\n\n`;
         
-        // --- PRICE SECTION ---
-        message += `📈 **Current Price:** ${f18(fullData.price)} USDT\n\n`;
+        message += `📈 **Current Price:** ${displayPrice} USDT\n\n`;
         
         if (isBuy) {
             message += `💰 **Spent:** ${f6(data.usdtIn)} USDT\n`;
             message += `🪙 **Received:** ${f18(data.tokenOut)} ${symbol}\n`;
         } else {
             message += `🪙 **Sold:** ${f18(data.tokenIn)} ${symbol}\n`;
-            message += `💰 **Received:** ${f6(data.usdtOut)} USDT\n`;
+            message += `💰 **Got:** ${f6(data.usdtOut)} USDT\n`;
         }
 
         message += `━━━━━━━━━━━━━━━━━━\n`;
@@ -61,11 +65,9 @@ async function sendAlert(type, data) {
                 inline_keyboard: [[{ text: "🌐 Visit Website", url: "https://stallion.exchange" }]]
             }
         });
-        console.log(`✅ ${type} alert sent with STN Live Price!`);
+        console.log(`✅ Alert sent! Price: ${displayPrice}`);
     } catch (err) { 
-        console.log(`❌ Alert Error (${type}):`, err.message);
-        const simpleMsg = `🚨 **STALLION ${type} DETECTED!**\n\nCheck on PolygonScan: [Click Here](https://polygonscan.com/tx/${data.txHash})`;
-        await bot.telegram.sendMessage(CHANNEL_ID, simpleMsg, { parse_mode: 'Markdown' });
+        console.log(`❌ Alert Error:`, err.message);
     }
 }
 
