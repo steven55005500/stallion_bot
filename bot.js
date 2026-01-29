@@ -31,16 +31,26 @@ async function sendAlert(type, data) {
         const emoji = isBuy ? '🚀' : '🔻';
         const symbol = "STN";
         
-        // FIX: Agar fullData.price 0 hai, toh transaction wala price use karo
+        // --- LIVE PRICE CALCULATION ---
+        const usdtPool = parseFloat(ethers.formatUnits(fullData.usdtLiquidity, 6));
+        const totalMinted = parseFloat(ethers.formatUnits(fullData.minted, 18));
+        const totalBurned = parseFloat(ethers.formatUnits(burnData.burntokens, 18));
+        const circulatingSupply = totalMinted - totalBurned;
+
+        // Agar contract 0 de raha hai, toh pool se price nikalo
         let displayPrice = f18(fullData.price);
-        if (displayPrice === "0.0000") {
-            displayPrice = f18(data.price);
+        if (displayPrice === "0.0000" && circulatingSupply > 0) {
+            displayPrice = (usdtPool / circulatingSupply).toFixed(4);
         }
+
+        // Market Cap Calculation
+        const marketCap = (displayPrice * circulatingSupply).toFixed(2);
 
         let message = `${emoji} **STALLION ${type} ALERT** ${emoji}\n`;
         message += `━━━━━━━━━━━━━━━━━━\n\n`;
         
-        message += `📈 **Current Price:** ${displayPrice} USDT\n\n`;
+        message += `📈 **Current Price:** ${displayPrice} USDT\n`;
+        message += `🌍 **Market Cap:** $${marketCap}\n\n`;
         
         if (isBuy) {
             message += `💰 **Spent:** ${f6(data.usdtIn)} USDT\n`;
@@ -51,9 +61,9 @@ async function sendAlert(type, data) {
         }
 
         message += `━━━━━━━━━━━━━━━━━━\n`;
-        message += `💎 **Total Minted:** ${f18(fullData.minted)} ${symbol}\n`;
-        message += `🔥 **Total Burned:** ${f18(burnData.burntokens)} ${symbol}\n`;
-        message += `💧 **Liquidity Pool:** ${f6(fullData.usdtLiquidity)} USDT\n`;
+        message += `💎 **Total Minted:** ${totalMinted.toFixed(4)} ${symbol}\n`;
+        message += `🔥 **Total Burned:** ${totalBurned.toFixed(4)} ${symbol}\n`;
+        message += `💧 **Liquidity Pool:** ${usdtPool.toFixed(2)} USDT\n`;
         message += `👥 **Holders:** ${fullData.uniqueTraders.toString()}\n\n`;
         
         message += `👤 **User:** \`${data.user.substring(0,6)}...${data.user.substring(38)}\`\n`;
@@ -65,7 +75,7 @@ async function sendAlert(type, data) {
                 inline_keyboard: [[{ text: "🌐 Visit Website", url: "https://stallion.exchange" }]]
             }
         });
-        console.log(`✅ Alert sent! Price: ${displayPrice}`);
+        console.log(`✅ Alert sent! Calculated Price: ${displayPrice}`);
     } catch (err) { 
         console.log(`❌ Alert Error:`, err.message);
     }
