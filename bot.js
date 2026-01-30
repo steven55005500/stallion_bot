@@ -64,8 +64,7 @@ async function sendAlert(type, data) {
         message += `💎 **Total Minted:** ${totalMinted.toFixed(4)} ${symbol}\n`;
         message += `🔥 **Total Burned:** ${totalBurned.toFixed(4)} ${symbol}\n`;
         message += `💧 **Liquidity Pool:** ${usdtPool.toFixed(2)} USDT\n`;
-        message += `👥 **Holders:** ${fullData.uniqueTraders.toString()}\n\n`;
-        
+         
         message += `👤 **User:** \`${data.user.substring(0,6)}...${data.user.substring(38)}\`\n`;
         message += `🔗 [View Transaction](https://polygonscan.com/tx/${data.txHash})`;
 
