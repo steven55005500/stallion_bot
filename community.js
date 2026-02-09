@@ -18,8 +18,7 @@ const CONFIG = {
     // 📢 SOCIALS
     channel: "@Stallion_Exchange",
     support: "@Stallion_Community_Manager_bot",
-    video: "https://youtube.com/shorts/Z97xhOvQhmg?si=0uCFqYZsL4vXgm8i",
-    instagram: "https://www.instagram.com/stallion_exchange_official" // 📸 REPLACE THIS WITH YOUR REAL LINK
+    video: "https://youtube.com/shorts/Z97xhOvQhmg?si=0uCFqYZsL4vXgm8i"
 };
 
 // --- 🎨 HELPER: Standard Back Button ---
@@ -74,8 +73,8 @@ const sendMenu = (ctx) => {
         [Markup.button.callback('📝 Register', 'REGISTER'), Markup.button.callback('📞 Support', 'SUPPORT')],
         [Markup.button.callback('📄 Whitepaper', 'PAPER'), Markup.button.callback('🛡 Audit Report', 'AUDIT')],
         [Markup.button.callback('🗺 Roadmap', 'MAP'), Markup.button.callback('❓ FAQs', 'FAQ')],
-        // 📸 Added Instagram Button Here
-        [Markup.button.url('📸 Follow Instagram', CONFIG.instagram), Markup.button.url('🌐 Visit Website', CONFIG.website)]
+        // Instagram Removed, only Website remains
+        [Markup.button.url('🌐 Visit Website', CONFIG.website)]
     ]);
 
     if (ctx.callbackQuery) {
@@ -317,14 +316,14 @@ bot.command('post_channel', async (ctx) => {
 Click a button to get details privately.
     `;
 
-    // 🚀 BUTTONS THAT DEEP LINK TO THE BOT
+    // 🚀 BUTTONS (Deep Links - Instagram Removed)
     const postButtons = Markup.inlineKeyboard([
         // Row 1
         [Markup.button.url('ℹ️ About Us', `https://t.me/${botUser}?start=about`), Markup.button.url('💰 How to Buy', `https://t.me/${botUser}?start=buy`)],
         // Row 2
         [Markup.button.url('📝 Register', `https://t.me/${botUser}?start=register`), Markup.button.url('📄 Whitepaper', `https://t.me/${botUser}?start=paper`)],
         // Row 3
-        [Markup.button.url('📂 Main Menu', `https://t.me/${botUser}?start=menu`), Markup.button.url('📸 Instagram', CONFIG.instagram)]
+        [Markup.button.url('📂 Main Menu', `https://t.me/${botUser}?start=menu`), Markup.button.url('🌐 Visit Website', CONFIG.website)]
     ]);
 
     try {
@@ -340,7 +339,7 @@ Click a button to get details privately.
 
 // --- 8. AUTOMATIC CHANNEL ENGAGEMENT (Every 30 Mins) ---
 
-// 📜 List of Rotating Messages (Professional English)
+// 📜 List of Rotating Messages (Professional English - No Instagram)
 const AUTO_MESSAGES = [
     // Message 1: Feature Highlight
     `
@@ -369,7 +368,7 @@ If someone asks for "Funds" or "Private Keys," block them immediately.
 ${CONFIG.website}
     `,
 
-    // Message 3: Community Invite + Instagram
+    // Message 3: Community Invite
     `
 🚀 **JOIN THE REVOLUTION**
 ━━━━━━━━━━━━━━━━
@@ -377,9 +376,6 @@ The most advanced exchange on the Polygon Network!
 
 Invite your friends and grow the community.
 Higher Trading Volume = Stronger Liquidity! 💧
-
-📸 **Follow us on Instagram:**
-${CONFIG.instagram}
 
 🌐 **Official Website:**
 ${CONFIG.website}
