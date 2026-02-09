@@ -423,6 +423,27 @@ Network: Polygon (MATIC)
                 buttons: Markup.inlineKeyboard([
                     [Markup.button.url('💰 Buy Guide', `https://t.me/${botUser}?start=buy`), Markup.button.url('🌐 Buy on Website', CONFIG.website)]
                 ])
+            },
+
+            // 5. 🔥 MAIN INTRO MESSAGE (New Addition)
+            {
+                text: `
+🚀 **STALLION EXCHANGE PROTOCOL**
+━━━━━━━━━━━━━━━━━━━━━
+*The First Smart-Contract Based Mint & Burn Exchange on Polygon.*
+
+💎 **Why Stallion?**
+✅ **Buy** = Token Mint (Supply Up)
+✅ **Sell** = Token Burn (Supply Down)
+✅ **Auto-Liquidity** on every trade
+✅ **100% Decentralized** & Audited
+
+🌍 *Choose an option below to begin:*
+                `,
+                buttons: Markup.inlineKeyboard([
+                    [Markup.button.url('📘 Open Main Menu', `https://t.me/${botUser}?start=menu`)],
+                    [Markup.button.url('🌐 Visit Website', CONFIG.website), Markup.button.url('📢 Channel', `https://t.me/${CONFIG.channel.replace('@', '')}`)]
+                ])
             }
         ];
         
