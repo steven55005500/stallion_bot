@@ -342,7 +342,7 @@ Click a button to get details privately.
 // --- 8. AUTOMATIC CHANNEL ENGAGEMENT (UPDATED: INSTANT START) ---
 
 const startAutoPosting = () => {
-    const intervalMinutes = 30; // ⏱️ Set Time Here (Minutes)
+    const intervalMinutes = 1; // ⏱️ Set Time Here (Minutes)
     const channelUsername = CONFIG.channel;
     const botUser = BOT_USERNAME; // Using fetched bot username
 
