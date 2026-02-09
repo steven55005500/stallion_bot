@@ -288,7 +288,7 @@ Click a button to get details privately.
 
 // --- 8. AUTOMATIC CHANNEL ENGAGEMENT (DEBUG VERSION) ---
 const startAutoPosting = () => {
-    const intervalMinutes = 2; // ✅ 2 Minutes for Testing
+    const intervalMinutes = 30; // ✅ 30 
     const channelUsername = CONFIG.channel;
     const botUser = BOT_USERNAME;
 
