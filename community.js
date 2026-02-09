@@ -338,19 +338,15 @@ Click a button to get details privately.
     }
 });
 
-// --- 8. AUTOMATIC CHANNEL ENGAGEMENT (Every 30 Mins) ---
+// --- 8. AUTOMATIC CHANNEL ENGAGEMENT (UPDATED: INSTANT START) ---
 
-// ⏳ Function to handle Auto-Posting with Buttons
 const startAutoPosting = () => {
     const intervalMinutes = 30; // ⏱️ Set Time Here (Minutes)
-    
-    console.log(`✅ Auto-Posting System Started! (Interval: ${intervalMinutes} mins)`);
+    const channelUsername = CONFIG.channel;
+    const botUser = BOT_USERNAME; // Using fetched bot username
 
-    setInterval(async () => {
-        const channelUsername = CONFIG.channel;
-        const botUser = BOT_USERNAME; // Using fetched bot username
-
-        // 📜 List of Rotating Messages with Buttons
+    // 🚀 Logic to Send Message (Extracted as Function)
+    const sendRandomMessage = async () => {
         const AUTO_MESSAGES_WITH_BUTTONS = [
             // 1. Feature Highlight
             {
@@ -389,7 +385,7 @@ Higher Trading Volume = Stronger Liquidity! 💧
                 ])
             },
 
-            // 3. Roadmap/Vision (Open PDF)
+            // 3. Roadmap/Vision
             {
                 text: `
 🗺 **OUR VISION**
@@ -425,7 +421,7 @@ Network: Polygon (MATIC)
                 ])
             },
 
-            // 5. 🔥 MAIN INTRO MESSAGE (New Addition)
+            // 5. 🔥 MAIN INTRO MESSAGE
             {
                 text: `
 🚀 **STALLION EXCHANGE PROTOCOL**
@@ -447,7 +443,7 @@ Network: Polygon (MATIC)
             }
         ];
         
-        // Randomly select one message object
+        // Randomly select one message
         const randomItem = AUTO_MESSAGES_WITH_BUTTONS[Math.floor(Math.random() * AUTO_MESSAGES_WITH_BUTTONS.length)];
 
         try {
@@ -460,16 +456,23 @@ Network: Polygon (MATIC)
         } catch (error) {
             console.log("❌ Auto-Post Error:", error.message);
         }
+    };
 
-    }, intervalMinutes * 60 * 1000);
+    console.log(`✅ Auto-Posting System Started! (First post sending NOW, then every ${intervalMinutes} mins)`);
+    
+    // 🔥 STEP 1: Send Immediately
+    sendRandomMessage();
+
+    // 🔥 STEP 2: Start Loop
+    setInterval(sendRandomMessage, intervalMinutes * 60 * 1000);
 };
 
 // --- 7. STARTUP LOGS ---
 bot.launch().then(() => {
-    BOT_USERNAME = bot.botInfo.username; // Fetch Bot Username automatically
+    BOT_USERNAME = bot.botInfo.username; 
     console.log(`✅ Stallion Manager Bot is Online & Ready! (@${BOT_USERNAME})`);
     console.log("-----------------------------------------");
-    startAutoPosting(); // Start Auto-Post only after bot is ready
+    startAutoPosting(); 
 });
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
