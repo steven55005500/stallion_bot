@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { Telegraf, Markup } = require('telegraf');
 
-// --- SETUP ---
+// --- SETUP  is new---
 const bot = new Telegraf(process.env.MANAGER_BOT_TOKEN);
 
 // Global variable to store Bot Username
