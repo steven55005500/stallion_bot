@@ -103,15 +103,38 @@ const showAbout = (ctx) => {
 
 const showBuy = (ctx) => {
     const text = `
-💰 **HOW TO BUY TOKENS**
+💰 HOW TO BUY STALLION TOKENS
 ━━━━━━━━━━━━━━━━━━━━━
-*Invest in Stallion in seconds:*
-1️⃣ Open **Stallion Exchange** DApp.
-2️⃣ Connect your **Polygon Wallet**.
-3️⃣ Enter USDT amount (**Min $1**).
-4️⃣ Click **[BUY]** Button.
-5️⃣ Approve transaction.
+Invest in Stallion in just a few simple steps:
 
+1️⃣ Register & Join
+Click on Join Now to open the official Stallion Exchange DApp.
+
+2️⃣ Click Buy
+After joining, tap on the [BUY] button to begin.
+
+3️⃣ Enter Amount
+Enter the amount of USDT you want to invest
+🔹 Minimum investment: $1
+
+4️⃣ Connect Your Polygon Wallet
+Connect any supported wallet on the Polygon Network:
+
+🔹 MetaMask
+https://metamask.io
+
+🔹 TokenPocket
+https://www.tokenpocket.pro
+
+🔹 Trust Wallet
+https://trustwallet.com
+
+👉 Always connect using the official Stallion Exchange DApp link.
+
+5️⃣ Approve Transaction
+Approve the transaction from your wallet to complete the purchase.
+
+ 
 🚀 **Result:** Tokens are minted to your wallet & Price increases!
     `;
     if(ctx.callbackQuery) ctx.editMessageText(text, { parse_mode: 'Markdown', ...backButton }).catch(() => {});
