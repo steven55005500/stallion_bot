@@ -4,8 +4,8 @@ const { Telegraf, Markup } = require('telegraf');
 // --- 🛠️ SETUP & ANTI-CRASH ---
 const bot = new Telegraf(process.env.MANAGER_BOT_TOKEN);
 
-// Global Error Handler (Ye bot ko band hone se rokega)
-bot.catch((err, ctx) => {
+// Global Error Handler (Bot crash nahi hoga agar Telegram API fail ho)
+bot.catch((err) => {
     console.log(`⚠️ Telegram Error (Ignored): ${err.message}`);
 });
 
@@ -25,110 +25,26 @@ const CONFIG = {
     video: "https://youtube.com/shorts/Z97xhOvQhmg?si=0uCFqYZsL4vXgm8i"
 };
 
-// --- 🎨 HELPER: Standard Back Button ---
+// --- 🎨 HELPERS ---
 const backButton = Markup.inlineKeyboard([
     [Markup.button.callback('🔙 Back to Main Menu', 'SHOW_MENU')]
 ]);
 
-// --- 1. SMART START COMMAND ---
-bot.start((ctx) => {
-    const payload = ctx.payload;
-    if (payload === 'about') return showAbout(ctx);
-    if (payload === 'buy') return showBuy(ctx);
-    if (payload === 'register') return showRegister(ctx);
-    if (payload === 'paper') return showPaper(ctx);
-    if (payload === 'menu') return sendMenu(ctx);
-
-    const welcomeMsg = `
-🚀 **STALLION EXCHANGE PROTOCOL**
-━━━━━━━━━━━━━━━━━━━━━
-*The First Smart-Contract Based Mint & Burn Exchange on Polygon.*
-
-💎 **Why Stallion?**
-✅ **Buy** = Token Mint (Supply Up)
-✅ **Sell** = Token Burn (Supply Down)
-✅ **Auto-Liquidity** on every trade
-✅ **100% Decentralized** & Audited
-
-🌍 *Choose an option below to begin:*
-    `;
-    const keyboard = Markup.inlineKeyboard([
-        [Markup.button.callback('📘 Open Main Menu', 'SHOW_MENU')],
-        [Markup.button.url('🌐 Visit Website', CONFIG.website), Markup.button.url('📢 Channel', `https://t.me/${CONFIG.channel.replace('@', '')}`)]
-    ]);
-    ctx.replyWithMarkdown(welcomeMsg, keyboard);
-});
-
-// --- 2. MAIN MENU DASHBOARD ---
-const sendMenu = (ctx) => {
-    const menuText = `
-📘 **MAIN MENU • STALLION EXCHANGE**
-━━━━━━━━━━━━━━━━━━━━━
-*Select a topic to learn more:*
-    `;
-    const menuButtons = Markup.inlineKeyboard([
-        [Markup.button.callback('ℹ️ About Us', 'ABOUT'), Markup.button.callback('💰 How to Buy', 'BUY')],
-        [Markup.button.callback('📝 Register', 'REGISTER'), Markup.button.callback('📞 Support', 'SUPPORT')],
-        [Markup.button.callback('📄 Whitepaper', 'PAPER'), Markup.button.callback('🛡 Audit Report', 'AUDIT')],
-        [Markup.button.callback('🗺 Roadmap', 'MAP'), Markup.button.callback('❓ FAQs', 'FAQ')],
-        [Markup.button.url('🌐 Visit Website', CONFIG.website)]
-    ]);
-
-    if (ctx.callbackQuery) {
-        ctx.editMessageText(menuText, { parse_mode: 'Markdown', ...menuButtons }).catch(() => {});
-    } else {
-        ctx.replyWithMarkdown(menuText, menuButtons);
-    }
-};
-
-bot.command('menu', (ctx) => sendMenu(ctx));
-bot.action('SHOW_MENU', (ctx) => sendMenu(ctx));
-
 // --- 3. CONTENT FUNCTIONS ---
 const showAbout = (ctx) => {
-    const text = `
-ℹ️ **ABOUT THE PROJECT**
-━━━━━━━━━━━━━━━━━━━━━
-**Stallion Exchange** is a revolutionary decentralized protocol built on the **Polygon Network**.
-
-⚙️ **Core Mechanism:**
-🔹 **Minting:** When you BUY, new tokens are created.
-🔹 **Burning:** When you SELL, tokens are destroyed forever.
-🔹 **Liquidity:** Every transaction automatically increases the pool.
-
-💎 **Entry:** Minimum Buy is only **$1**
-    `;
+    const text = `ℹ️ **ABOUT THE PROJECT**\n━━━━━━━━━━━━━━━━━━━━━\n**Stallion Exchange** is a revolutionary decentralized protocol built on the **Polygon Network**.\n\n⚙️ **Core Mechanism:**\n🔹 **Minting:** When you BUY, new tokens are created.\n🔹 **Burning:** When you SELL, tokens are destroyed forever.\n🔹 **Liquidity:** Every transaction automatically increases the pool.\n\n💎 **Entry:** Minimum Buy is only **$1**`;
     if(ctx.callbackQuery) ctx.editMessageText(text, { parse_mode: 'Markdown', ...backButton }).catch(() => {});
     else ctx.replyWithMarkdown(text, backButton);
 };
 
 const showBuy = (ctx) => {
-    const text = `
-💰 **HOW TO BUY TOKENS**
-━━━━━━━━━━━━━━━━━━━━━
-*Invest in Stallion in seconds:*
-1️⃣ Open **Stallion Exchange** DApp.
-2️⃣ Connect your **Polygon Wallet**.
-3️⃣ Enter USDT amount (**Min $1**).
-4️⃣ Click **[BUY]** Button.
-5️⃣ Approve transaction.
-
-🚀 **Result:** Tokens are minted to your wallet & Price increases!
-    `;
+    const text = `💰 **HOW TO BUY TOKENS**\n━━━━━━━━━━━━━━━━━━━━━\n*Invest in Stallion in seconds:*\n1️⃣ Open **Stallion Exchange** DApp.\n2️⃣ Connect your **Polygon Wallet**.\n3️⃣ Enter USDT amount (**Min $1**).\n4️⃣ Click **[BUY]** Button.\n5️⃣ Approve transaction.\n\n🚀 **Result:** Tokens are minted & Price increases!`;
     if(ctx.callbackQuery) ctx.editMessageText(text, { parse_mode: 'Markdown', ...backButton }).catch(() => {});
     else ctx.replyWithMarkdown(text, backButton);
 };
 
 const showRegister = (ctx) => {
-    const text = `
-📝 **REGISTRATION GUIDE**
-━━━━━━━━━━━━━━━━━━━━━
-*Follow these simple steps to join:*
-1️⃣ **Install Wallet:** MetaMask or Trust Wallet.
-2️⃣ **Network:** Switch to **Polygon (MATIC/POL)**.
-3️⃣ **Gas Fee:** Keep $0.1 worth of POL for fees.
-4️⃣ **Connect:** Open link below in wallet browser.
-    `;
+    const text = `📝 **REGISTRATION GUIDE**\n━━━━━━━━━━━━━━━━━━━━━\n*Follow these simple steps to join:*\n1️⃣ **Install Wallet:** MetaMask or Trust Wallet.\n2️⃣ **Network:** Switch to **Polygon (MATIC/POL)**.\n3️⃣ **Gas Fee:** Keep $0.1 worth of POL for fees.\n4️⃣ **Connect:** Open link below in wallet browser.`;
     const regButtons = Markup.inlineKeyboard([
         [Markup.button.url('🔗 Register Now', CONFIG.register)],
         [Markup.button.url('🎥 Watch Video Guide', CONFIG.video)],
@@ -139,16 +55,7 @@ const showRegister = (ctx) => {
 };
 
 const showPaper = (ctx) => {
-    const text = `
-📄 **TECHNICAL WHITEPAPER**
-━━━━━━━━━━━━━━━━━━━━━
-*Deep dive into the Stallion logic:*
-▫️ **Smart Contract Architecture**
-▫️ **Mint & Burn Algorithm**
-▫️ **Sustainability Model**
-
-👇 *Tap below to view the full document:*
-    `;
+    const text = `📄 **TECHNICAL WHITEPAPER**\n━━━━━━━━━━━━━━━━━━━━━\n*Deep dive into the Stallion logic:*\n▫️ **Smart Contract Architecture**\n▫️ **Mint & Burn Algorithm**\n▫️ **Sustainability Model**\n\n👇 *Tap below to view the full document:*`;
     const paperButtons = Markup.inlineKeyboard([
         [Markup.button.url('📄 View Whitepaper', CONFIG.whitepaper)],
         [Markup.button.callback('🔙 Back to Menu', 'SHOW_MENU')]
@@ -157,21 +64,45 @@ const showPaper = (ctx) => {
     else ctx.replyWithMarkdown(text, paperButtons);
 };
 
+// --- 1. START & MENU COMMANDS ---
+const sendMenu = (ctx) => {
+    const menuText = `📘 **MAIN MENU • STALLION EXCHANGE**\n━━━━━━━━━━━━━━━━━━━━━\n*Select a topic to learn more:*`;
+    const menuButtons = Markup.inlineKeyboard([
+        [Markup.button.callback('ℹ️ About Us', 'ABOUT'), Markup.button.callback('💰 How to Buy', 'BUY')],
+        [Markup.button.callback('📝 Register', 'REGISTER'), Markup.button.callback('📞 Support', 'SUPPORT')],
+        [Markup.button.callback('📄 Whitepaper', 'PAPER'), Markup.button.callback('🛡 Audit Report', 'AUDIT')],
+        [Markup.button.callback('🗺 Roadmap', 'MAP'), Markup.button.callback('❓ FAQs', 'FAQ')],
+        [Markup.button.url('🌐 Visit Website', CONFIG.website)]
+    ]);
+    if (ctx.callbackQuery) ctx.editMessageText(menuText, { parse_mode: 'Markdown', ...menuButtons }).catch(() => {});
+    else ctx.replyWithMarkdown(menuText, menuButtons);
+};
+
+bot.start((ctx) => {
+    const payload = ctx.payload;
+    if (payload === 'about') return showAbout(ctx);
+    if (payload === 'buy') return showBuy(ctx);
+    if (payload === 'register') return showRegister(ctx);
+    if (payload === 'paper') return showPaper(ctx);
+    if (payload === 'menu') return sendMenu(ctx);
+
+    const welcomeMsg = `🚀 **STALLION EXCHANGE PROTOCOL**\n━━━━━━━━━━━━━━━━━━━━━\n*The First Smart-Contract Based Mint & Burn Exchange on Polygon.*\n\n💎 **Why Stallion?**\n✅ **Buy** = Token Mint (Supply Up)\n✅ **Sell** = Token Burn (Supply Down)\n✅ **Auto-Liquidity** on every trade\n\n🌍 *Choose an option niche:*`;
+    const keyboard = Markup.inlineKeyboard([
+        [Markup.button.callback('📘 Open Main Menu', 'SHOW_MENU')],
+        [Markup.button.url('🌐 Visit Website', CONFIG.website), Markup.button.url('📢 Channel', `https://t.me/${CONFIG.channel.replace('@', '')}`)]
+    ]);
+    ctx.replyWithMarkdown(welcomeMsg, keyboard);
+});
+
+bot.command('menu', (ctx) => sendMenu(ctx));
+bot.action('SHOW_MENU', (ctx) => sendMenu(ctx));
 bot.action('ABOUT', (ctx) => showAbout(ctx));
 bot.action('BUY', (ctx) => showBuy(ctx));
 bot.action('REGISTER', (ctx) => showRegister(ctx));
 bot.action('PAPER', (ctx) => showPaper(ctx));
 
 bot.action('AUDIT', (ctx) => {
-    const text = `
-🛡 **SECURITY AUDIT REPORT**
-━━━━━━━━━━━━━━━━━━━━━
-✅ **Audited Smart Contracts**
-✅ **No Backdoors / Hidden functions**
-✅ **100% Secure Architecture**
-
-👇 *View the full Audit Report below:*
-    `;
+    const text = `🛡 **SECURITY AUDIT REPORT**\n━━━━━━━━━━━━━━━━━━━━━\n✅ **Audited Smart Contracts**\n✅ **No Backdoors / Hidden functions**\n\n👇 *View the full Audit Report below:*`;
     const auditButtons = Markup.inlineKeyboard([
         [Markup.button.url('🛡 View Audit Report', CONFIG.audit)],
         [Markup.button.callback('🔙 Back to Menu', 'SHOW_MENU')]
@@ -180,15 +111,7 @@ bot.action('AUDIT', (ctx) => {
 });
 
 bot.action('MAP', (ctx) => {
-    const text = `
-🗺 **PROJECT ROADMAP**
-━━━━━━━━━━━━━━━━━━━━━
-📍 **PHASE 1 (Current):** Smart Contract & Website
-📍 **PHASE 2:** Global Marketing & Listings
-📍 **PHASE 3:** Multi-Chain Expansion
-
-👇 *View detailed roadmap:*
-    `;
+    const text = `🗺 **PROJECT ROADMAP**\n━━━━━━━━━━━━━━━━━━━━━\n📍 **PHASE 1 (Current):** Smart Contract & Website\n📍 **PHASE 2:** Global Marketing & Listings\n📍 **PHASE 3:** Multi-Chain Expansion`;
     const mapButtons = Markup.inlineKeyboard([
         [Markup.button.url('🗺 View Roadmap', CONFIG.roadmapPdf)],
         [Markup.button.callback('🔙 Back to Menu', 'SHOW_MENU')]
@@ -197,18 +120,7 @@ bot.action('MAP', (ctx) => {
 });
 
 bot.action('FAQ', (ctx) => {
-    const text = `
-❓ **FAQs**
-━━━━━━━━━━━━━━━━━━━━━
-**Q: Is this centralized?**
-A: No, it's 100% smart-contract based.
-**Q: Who controls the price?**
-A: The Market. Buy pushes price UP, Sell pushes price DOWN.
-**Q: Minimum investment?**
-A: You can start with just **$1**.
-
-👇 *View full FAQs List:*
-    `;
+    const text = `❓ **FAQs**\n━━━━━━━━━━━━━━━━━━━━━\n**Q: Is this centralized?**\nA: No, it's 100% smart-contract based.\n**Q: Who controls the price?**\nA: The Market.\n\n👇 *View full FAQs List:*`;
     const faqButtons = Markup.inlineKeyboard([
         [Markup.button.url('❓ View FAQs', CONFIG.faqPdf)],
         [Markup.button.callback('🔙 Back to Menu', 'SHOW_MENU')]
@@ -217,20 +129,7 @@ A: You can start with just **$1**.
 });
 
 bot.action('SUPPORT', (ctx) => {
-    const displayChannel = CONFIG.channel.replace(/_/g, '\\_');
-    const displaySupport = CONFIG.support.replace(/_/g, '\\_');
-    const text = `
-📞 **CONTACT & SUPPORT**
-━━━━━━━━━━━━━━━━━━━━━
-📢 **Official Channel:**
-${displayChannel}
-
-💬 **24/7 Admin Support:**
-${displaySupport}
-
-⚠️ **SECURITY WARNING:**
-*Admins will NEVER DM you first.*
-    `;
+    const text = `📞 **CONTACT & SUPPORT**\n━━━━━━━━━━━━━━━━━━━━━\n📢 **Official Channel:** ${CONFIG.channel}\n💬 **24/7 Admin Support:** ${CONFIG.support}\n\n⚠️ **SECURITY WARNING:**\n*Admins will NEVER DM you first.*`;
     ctx.editMessageText(text, { parse_mode: 'Markdown', ...backButton }).catch(() => {});
 });
 
@@ -240,17 +139,9 @@ bot.on('new_chat_members', async (ctx) => {
     for (const member of newMembers) {
         if (member.id === ctx.botInfo.id) continue;
         const firstName = member.first_name || 'Member';
-        const welcomeText = `
-👋 **Welcome, ${firstName}!**
-
-🚀 **Welcome to the Stallion Exchange Community!**
-We are the first *Mint & Burn* exchange on the Polygon Network.
-
-💎 **Quick Links:**
-👇 Select an option below to get started:
-        `;
+        const welcomeText = `👋 **Welcome, ${firstName}!**\n\n🚀 **Welcome to the Stallion Exchange Community!**\n\n💎 **Quick Links:**\n👇 Select an option below to get started:`;
         const welcomeButtons = Markup.inlineKeyboard([
-            [Markup.button.url('🌐 Visit Website', CONFIG.website)],
+            [Markup.button.url('🌐 Website', CONFIG.website)],
             [Markup.button.url('🤖 Start Bot (Menu)', `https://t.me/${ctx.botInfo.username}`)]
         ]);
         try {
@@ -265,135 +156,54 @@ We are the first *Mint & Burn* exchange on the Polygon Network.
 
 // --- 6. ADMIN COMMAND ---
 bot.command('post_channel', async (ctx) => {
-    const channelUsername = CONFIG.channel; 
     const botUser = ctx.botInfo.username;
-    const postText = `
-🚀 **WELCOME TO STALLION EXCHANGE**
-━━━━━━━━━━━━━━━━━━━━━
-*The Future of Decentralized Trading on the Polygon Network.*
-
-💎 **Protocol Features:**
-🔹 **Mint & Burn:** Fair Price Mechanism
-🔹 **Auto-Liquidity:** Locked on every trade
-🔹 **Secure:** Fully Audited & Transparent
-
-👇 **Use the Menu below:**
-Click a button to get details privately.
-    `;
+    const postText = `🚀 **WELCOME TO STALLION EXCHANGE**\n━━━━━━━━━━━━━━━━━━━━━\n*The Future of Decentralized Trading on Polygon.*\n\n👇 **Use the Menu below:**\nClick a button to get details privately.`;
     const postButtons = Markup.inlineKeyboard([
         [Markup.button.url('ℹ️ About Us', `https://t.me/${botUser}?start=about`), Markup.button.url('💰 How to Buy', `https://t.me/${botUser}?start=buy`)],
         [Markup.button.url('📝 Register', `https://t.me/${botUser}?start=register`), Markup.button.url('📄 Whitepaper', `https://t.me/${botUser}?start=paper`)],
         [Markup.button.url('📂 Main Menu', `https://t.me/${botUser}?start=menu`), Markup.button.url('🌐 Visit Website', CONFIG.website)]
     ]);
     try {
-        await ctx.telegram.sendMessage(channelUsername, postText, { parse_mode: 'Markdown', ...postButtons });
-        ctx.reply(`✅ **Success!** User-Specific Menu posted to Channel.`);
+        await ctx.telegram.sendMessage(CONFIG.channel, postText, { parse_mode: 'Markdown', ...postButtons });
+        ctx.reply(`✅ **Success!** Intro posted to Channel.`);
     } catch (error) { ctx.reply(`❌ **Error:** ${error.message}`); }
 });
 
-// --- 8. AUTOMATIC CHANNEL ENGAGEMENT (FINAL VERSION) ---
-const startAutoPosting = () => {
-    const intervalMinutes = 30; // ✅ SET TO 30 MINUTES
+// --- 8. AUTOMATIC CHANNEL ENGAGEMENT (ROTATION) ---
+const startAutoPosting = async () => {
+    const intervalMinutes = 30;
     const channelUsername = CONFIG.channel;
-    const botUser = BOT_USERNAME;
+
+    // Har baar username fresh check karega
+    if (!BOT_USERNAME) {
+        const me = await bot.telegram.getMe();
+        BOT_USERNAME = me.username;
+    }
 
     const sendRandomMessage = async () => {
         const timestamp = new Date().toLocaleTimeString();
-        console.log(`[${timestamp}] 📨 Preparing Auto-Post...`);
-        
-        const AUTO_MESSAGES_WITH_BUTTONS = [
-            // 1. Feature Highlight
+        const botUrl = `https://t.me/${BOT_USERNAME}`;
+
+        const AUTO_MESSAGES = [
             {
-                text: `
-💎 **DID YOU KNOW?**
-━━━━━━━━━━━━━━━━
-**Stallion Exchange** operates on a unique "Mint & Burn" mechanism.
-
-✅ **Buy** = Supply Increases (Price Mints)
-✅ **Sell** = Supply Decreases (Price Burns)
-
-This system is 100% Transparent and Decentralized!
-👇 **Start Trading:**
-                `,
-                buttons: Markup.inlineKeyboard([
-                    [Markup.button.url('💰 How to Buy', `https://t.me/${botUser}?start=buy`)],
-                    [Markup.button.url('🌐 Visit Website', CONFIG.website)]
-                ])
+                text: `💎 **DID YOU KNOW?**\n━━━━━━━━━━━━━━━━\n**Stallion Exchange** operates on a unique "Mint & Burn" mechanism.\n\n✅ **Buy** = Token Mint\n✅ **Sell** = Token Burn\n\n👇 **Start Trading:**`,
+                buttons: Markup.inlineKeyboard([[Markup.button.url('💰 How to Buy', `${botUrl}?start=buy`)],[Markup.button.url('🌐 Visit Website', CONFIG.website)]])
             },
-            // 2. Community Invite
             {
-                text: `
-🚀 **JOIN THE REVOLUTION**
-━━━━━━━━━━━━━━━━
-The most advanced exchange on the Polygon Network!
-
-Invite your friends and grow the community.
-Higher Trading Volume = Stronger Liquidity! 💧
-
-👇 **Quick Actions:**
-                `,
-                buttons: Markup.inlineKeyboard([
-                    [Markup.button.url('📂 Open Menu', `https://t.me/${botUser}?start=menu`)],
-                    [Markup.button.url('🔗 Register Now', CONFIG.register)]
-                ])
+                text: `🚀 **JOIN THE REVOLUTION**\n━━━━━━━━━━━━━━━━\nThe most advanced exchange on the Polygon Network!\n\nInvite your friends and grow the community.💧`,
+                buttons: Markup.inlineKeyboard([[Markup.button.url('📂 Open Menu', `${botUrl}?start=menu`)],[Markup.button.url('🔗 Register Now', CONFIG.register)]])
             },
-            // 3. Roadmap/Vision
             {
-                text: `
-🗺 **OUR VISION**
-━━━━━━━━━━━━━━━━
-Our mission is to build a truly community-driven exchange.
-
-🔹 No Manual Manipulation
-🔹 Auto-Liquidity Locking
-🔹 Fair Price for Everyone
-
-👇 **View our Plans:**
-                `,
-                buttons: Markup.inlineKeyboard([
-                    [Markup.button.url('📄 View Whitepaper', CONFIG.whitepaper)],
-                    [Markup.button.url('🗺 View Roadmap', CONFIG.roadmapPdf)]
-                ])
+                text: `🗺 **OUR VISION**\n━━━━━━━━━━━━━━━━\nOur mission is to build a truly community-driven exchange.\n\n🔹 No Manual Manipulation\n🔹 Auto-Liquidity Locking`,
+                buttons: Markup.inlineKeyboard([[Markup.button.url('📄 Whitepaper', CONFIG.whitepaper)],[Markup.button.url('🗺 Roadmap', CONFIG.roadmapPdf)]])
             },
-            // 4. Quick Action (Invest)
             {
-                text: `
-💰 **READY TO INVEST?**
-━━━━━━━━━━━━━━━━
-You can start with as little as **$1**!
-
-Minimum Investment: $1 USDT
-Network: Polygon (MATIC)
-
-👇 **Get Started Now:**
-                `,
-                buttons: Markup.inlineKeyboard([
-                    [Markup.button.url('💰 Buy Guide', `https://t.me/${botUser}?start=buy`), Markup.button.url('🌐 Buy on Website', CONFIG.website)]
-                ])
-            },
-            // 5. 🔥 MAIN INTRO MESSAGE
-            {
-                text: `
-🚀 **STALLION EXCHANGE PROTOCOL**
-━━━━━━━━━━━━━━━━━━━━━
-*The First Smart-Contract Based Mint & Burn Exchange on Polygon.*
-
-💎 **Why Stallion?**
-✅ **Buy** = Token Mint (Supply Up)
-✅ **Sell** = Token Burn (Supply Down)
-✅ **Auto-Liquidity** on every trade
-✅ **100% Decentralized** & Audited
-
-🌍 *Choose an option below to begin:*
-                `,
-                buttons: Markup.inlineKeyboard([
-                    [Markup.button.url('📘 Open Main Menu', `https://t.me/${botUser}?start=menu`)],
-                    [Markup.button.url('🌐 Visit Website', CONFIG.website), Markup.button.url('📢 Channel', `https://t.me/${CONFIG.channel.replace('@', '')}`)]
-                ])
+                text: `💰 **READY TO INVEST?**\n━━━━━━━━━━━━━━━━\nYou can start with as little as **$1**!\n\nMinimum Investment: $1 USDT`,
+                buttons: Markup.inlineKeyboard([[Markup.button.url('💰 Buy Guide', `${botUrl}?start=buy`)],[Markup.button.url('🌐 Website', CONFIG.website)]])
             }
         ];
-        
-        const randomItem = AUTO_MESSAGES_WITH_BUTTONS[Math.floor(Math.random() * AUTO_MESSAGES_WITH_BUTTONS.length)];
+
+        const randomItem = AUTO_MESSAGES[Math.floor(Math.random() * AUTO_MESSAGES.length)];
 
         try {
             await bot.telegram.sendMessage(channelUsername, randomItem.text, {
@@ -401,40 +211,31 @@ Network: Polygon (MATIC)
                 disable_web_page_preview: true,
                 ...randomItem.buttons
             });
-            console.log(`[${timestamp}] ✅ Auto-Post SENT successfully.`);
+            console.log(`[${timestamp}] ✅ Auto-Post SENT.`);
         } catch (error) {
             console.log(`[${timestamp}] ❌ Auto-Post FAILED:`, error.message);
         }
     };
 
-    console.log(`✅ Auto-Posting System Started! (Interval: ${intervalMinutes} mins)`);
+    console.log(`✅ Auto-Posting Started! (Every ${intervalMinutes} mins)`);
     
-    // 🔥 STEP 1: Send Immediately
+    // 🔥 STEP 1: Pehla message turant
     sendRandomMessage();
 
-    // 🔥 STEP 2: Start Timer Loop
-    setInterval(() => {
-        console.log("⏰ Timer Tick: Triggering Message...");
-        sendRandomMessage();
-    }, intervalMinutes * 60 * 1000);
+    // 🔥 STEP 2: Interval timer
+    setInterval(sendRandomMessage, intervalMinutes * 60 * 1000);
 
-    // 🔥 STEP 3: HEARTBEAT LOG (To check if bot is alive)
+    // 🔥 STEP 3: Heartbeat log
     setInterval(() => {
-        const time = new Date().toLocaleTimeString();
-        console.log(`[${time}] ⏳ ... Bot is Waiting (Heartbeat) ...`);
-    }, 30000); 
+        console.log(`[${new Date().toLocaleTimeString()}] ⏳ Heartbeat: Bot is alive.`);
+    }, 60000); 
 };
 
-// --- 7. STARTUP LOGS ---
+// --- 7. STARTUP ---
 bot.launch().then(() => {
-    BOT_USERNAME = bot.botInfo.username; 
-    console.log(`✅ Stallion Manager Bot is Online & Ready! (@${BOT_USERNAME})`);
-    console.log("-----------------------------------------");
+    console.log(`✅ Stallion Bot is Online!`);
     startAutoPosting(); 
-}).catch((err) => {
-    console.log("❌ Startup Error:", err);
-});
+}).catch((err) => console.log("Startup Error:", err));
 
-// Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
