@@ -15,7 +15,8 @@ let BOT_USERNAME = '';
 // --- 🔗 CONFIGURATION ---
 const CONFIG = {
     website: "https://stallion.exchange",
-     whitepaper: "https://stallion.exchange/assets/indexpdf/STALLIONEXCHANGEWhitePaper.pdf",
+    register: "https://www.stallion.exchange", 
+    whitepaper: "https://stallion.exchange/assets/indexpdf/STALLIONEXCHANGEWhitePaper.pdf",
     audit: "https://stallion.exchange/assets/indexpdf/auditreport.pdf",
     roadmapPdf: "https://stallion.exchange/assets/indexpdf/Roadmapstallionexchange.pdf",
     faqPdf: "https://stallion.exchange/assets/indexpdf/StallionExchangeFAQs.pdf",
@@ -134,7 +135,7 @@ https://trustwallet.com
 5️⃣ Approve Transaction
 Approve the transaction from your wallet to complete the purchase.
 
- 
+
 🚀 **Result:** Tokens are minted to your wallet & Price increases!
     `;
     if(ctx.callbackQuery) ctx.editMessageText(text, { parse_mode: 'Markdown', ...backButton }).catch(() => {});
@@ -143,13 +144,30 @@ Approve the transaction from your wallet to complete the purchase.
 
 const showRegister = (ctx) => {
     const text = `
-📝 **REGISTRATION GUIDE**
+📝 REGISTRATION GUIDE
 ━━━━━━━━━━━━━━━━━━━━━
-*Follow these simple steps to join:*
-1️⃣ **Install Wallet:** MetaMask or Trust Wallet.
-2️⃣ **Network:** Switch to **Polygon (MATIC/POL)**.
-3️⃣ **Gas Fee:** Keep $0.1 worth of POL for fees.
-4️⃣ **Connect:** Open link below in wallet browser.
+Follow these simple steps to join Stallion Exchange:
+
+1️⃣ Install a Wallet
+Download and install any supported wallet:
+
+🔹 MetaMask
+https://metamask.io
+
+🔹 TokenPocket
+https://www.tokenpocket.pro
+
+🔹 Trust Wallet
+https://trustwallet.com
+
+2️⃣ Select Network
+Switch your wallet network to Polygon (MATIC / POL).
+
+3️⃣ Gas Fee Balance
+Keep at least $0.10 worth of POL in your wallet to cover gas fees.
+
+4️⃣ Connect to DApp
+Open the official Stallion Exchange DApp link directly in your wallet’s DApp / Browser section and connect your wallet.
     `;
     const regButtons = Markup.inlineKeyboard([
         [Markup.button.url('🔗 Register Now', CONFIG.register)],
