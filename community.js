@@ -160,18 +160,16 @@ const showRegister = (ctx) => {
 ━━━━━━━━━━━━━━━━━━━━━
 Follow these simple steps to join Stallion Exchange:
 
-1️⃣ Install a Wallet
+1️⃣ Install a Wallet  
 Download and install any supported wallet:
 
 🔹 MetaMask Wallet  
 https://metamask.app.link  
-(Open app if installed, otherwise redirect to Play Store / App Store / Website)
 
 🔹 Trust Wallet  
 https://link.trustwallet.com  
-(Open app if installed, otherwise redirect to Play Store / App Store / Website)
 
-🔹 TokenPocket Wallet
+🔹 TokenPocket Wallet  
 
 📱 Mobile App Download:
 Android (Play Store):
@@ -183,14 +181,26 @@ https://apps.apple.com/app/tokenpocket/id6444625622
 💻 Desktop / Website:
 https://www.tokenpocket.pro
 
-2️⃣ Select Network
-Switch your wallet network to Polygon (MATIC / POL).
+2️⃣ Select Network  
+Switch your wallet network to **Polygon (MATIC / POL)**.
 
-3️⃣ Gas Fee Balance
-Keep at least $0.10 worth of POL in your wallet to cover gas fees.
+3️⃣ Gas Fee Balance  
+Keep at least **$0.10 worth of POL** in your wallet to cover gas fees.
 
-4️⃣ Connect to DApp
-Open the official Stallion Exchange DApp link directly in your wallet’s DApp / Browser section and connect your wallet.
+4️⃣ Open Stallion Exchange DApp  
+After opening your wallet app:
+
+• Go to **DApp / Discover / Browser** section  
+• If you have a **Referral Link**, paste it there and open  
+• If you do NOT have a referral link, search by name:  
+  **Stallion Exchange**  
+• Open the official DApp  
+
+• After the DApp opens, click **JOIN NOW**  
+• Connect your wallet and approve the transaction  
+
+✔ Your registration will be completed **with referral applied**
+
     `;
     const regButtons = Markup.inlineKeyboard([
         [Markup.button.url('🔗 Register Now', CONFIG.register)],
