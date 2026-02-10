@@ -15,8 +15,7 @@ let BOT_USERNAME = '';
 // --- 🔗 CONFIGURATION ---
 const CONFIG = {
     website: "https://stallion.exchange",
-    register: "https://www.stallion.exchange/index.html?0x54a66bee60a647d4390ad86dcce2c2bbeeef4c82", 
-    whitepaper: "https://stallion.exchange/assets/indexpdf/STALLIONEXCHANGEWhitePaper.pdf",
+     whitepaper: "https://stallion.exchange/assets/indexpdf/STALLIONEXCHANGEWhitePaper.pdf",
     audit: "https://stallion.exchange/assets/indexpdf/auditreport.pdf",
     roadmapPdf: "https://stallion.exchange/assets/indexpdf/Roadmapstallionexchange.pdf",
     faqPdf: "https://stallion.exchange/assets/indexpdf/StallionExchangeFAQs.pdf",
