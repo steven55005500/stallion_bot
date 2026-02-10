@@ -121,14 +121,18 @@ Enter the amount of USDT you want to invest
 4️⃣ Connect Your Polygon Wallet
 Connect any supported wallet on the Polygon Network:
 
-🔹 MetaMask
-https://metamask.io
+🔹 MetaMask Wallet  
+https://metamask.app.link  
+(Open app if installed, otherwise redirect to Play Store / App Store / Website)
 
-🔹 TokenPocket
-https://www.tokenpocket.pro
+🔹 Trust Wallet  
+https://link.trustwallet.com  
+(Open app if installed, otherwise redirect to Play Store / App Store / Website)
 
-🔹 Trust Wallet
-https://trustwallet.com
+🔹 TokenPocket Wallet  
+https://tpwallet.io  
+(Open app if installed, otherwise redirect to Play Store / App Store / Website)
+
 
 👉 Always connect using the official Stallion Exchange DApp link.
 
@@ -151,14 +155,18 @@ Follow these simple steps to join Stallion Exchange:
 1️⃣ Install a Wallet
 Download and install any supported wallet:
 
-🔹 MetaMask
-https://metamask.io
+🔹 MetaMask Wallet  
+https://metamask.app.link  
+(Open app if installed, otherwise redirect to Play Store / App Store / Website)
 
-🔹 TokenPocket
-https://www.tokenpocket.pro
+🔹 Trust Wallet  
+https://link.trustwallet.com  
+(Open app if installed, otherwise redirect to Play Store / App Store / Website)
 
-🔹 Trust Wallet
-https://trustwallet.com
+🔹 TokenPocket Wallet  
+https://tpwallet.io  
+(Open app if installed, otherwise redirect to Play Store / App Store / Website)
+
 
 2️⃣ Select Network
 Switch your wallet network to Polygon (MATIC / POL).
