@@ -1,8 +1,13 @@
 require('dotenv').config();
 const { Telegraf, Markup } = require('telegraf');
 
-// --- SETUP  is new---
+// --- 🛠️ SETUP & ANTI-CRASH ---
 const bot = new Telegraf(process.env.MANAGER_BOT_TOKEN);
+
+// Global Error Handler (Ye bot ko band hone se rokega)
+bot.catch((err, ctx) => {
+    console.log(`⚠️ Telegram Error (Ignored): ${err.message}`);
+});
 
 // Global variable to store Bot Username
 let BOT_USERNAME = '';
@@ -286,14 +291,15 @@ Click a button to get details privately.
     } catch (error) { ctx.reply(`❌ **Error:** ${error.message}`); }
 });
 
-// --- 8. AUTOMATIC CHANNEL ENGAGEMENT (DEBUG VERSION) ---
+// --- 8. AUTOMATIC CHANNEL ENGAGEMENT (FINAL VERSION) ---
 const startAutoPosting = () => {
-    const intervalMinutes = 30; // ✅ 30 
+    const intervalMinutes = 30; // ✅ SET TO 30 MINUTES
     const channelUsername = CONFIG.channel;
     const botUser = BOT_USERNAME;
 
     const sendRandomMessage = async () => {
-        console.log("📨 Attempting to send Auto-Post..."); // DEBUG LOG
+        const timestamp = new Date().toLocaleTimeString();
+        console.log(`[${timestamp}] 📨 Preparing Auto-Post...`);
         
         const AUTO_MESSAGES_WITH_BUTTONS = [
             // 1. Feature Highlight
@@ -395,15 +401,15 @@ Network: Polygon (MATIC)
                 disable_web_page_preview: true,
                 ...randomItem.buttons
             });
-            console.log("✅ Auto-Post with Buttons sent to Channel");
+            console.log(`[${timestamp}] ✅ Auto-Post SENT successfully.`);
         } catch (error) {
-            console.log("❌ Auto-Post Error:", error.message);
+            console.log(`[${timestamp}] ❌ Auto-Post FAILED:`, error.message);
         }
     };
 
-    console.log(`✅ Auto-Posting System Started! (First post sending NOW, then every ${intervalMinutes} mins)`);
+    console.log(`✅ Auto-Posting System Started! (Interval: ${intervalMinutes} mins)`);
     
-    // 🔥 STEP 1: Send Immediatel
+    // 🔥 STEP 1: Send Immediately
     sendRandomMessage();
 
     // 🔥 STEP 2: Start Timer Loop
@@ -414,7 +420,8 @@ Network: Polygon (MATIC)
 
     // 🔥 STEP 3: HEARTBEAT LOG (To check if bot is alive)
     setInterval(() => {
-        console.log("⏳ ... Bot is Waiting (Heartbeat) ...");
+        const time = new Date().toLocaleTimeString();
+        console.log(`[${time}] ⏳ ... Bot is Waiting (Heartbeat) ...`);
     }, 30000); 
 };
 
@@ -424,7 +431,10 @@ bot.launch().then(() => {
     console.log(`✅ Stallion Manager Bot is Online & Ready! (@${BOT_USERNAME})`);
     console.log("-----------------------------------------");
     startAutoPosting(); 
+}).catch((err) => {
+    console.log("❌ Startup Error:", err);
 });
 
+// Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
