@@ -129,9 +129,17 @@ https://metamask.app.link
 https://link.trustwallet.com  
 (Open app if installed, otherwise redirect to Play Store / App Store / Website)
 
-🔹 TokenPocket Wallet  
-https://tpwallet.io  
-(Open app if installed, otherwise redirect to Play Store / App Store / Website)
+🔹 TokenPocket Wallet
+
+📱 Mobile App Download:
+Android (Play Store):
+https://play.google.com/store/apps/details?id=vip.mytokenpocket
+
+iOS (App Store):
+https://apps.apple.com/app/tokenpocket/id6444625622
+
+💻 Desktop / Website:
+https://www.tokenpocket.pro
 
 
 👉 Always connect using the official Stallion Exchange DApp link.
