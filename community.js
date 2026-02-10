@@ -403,7 +403,7 @@ Network: Polygon (MATIC)
 
     console.log(`✅ Auto-Posting System Started! (First post sending NOW, then every ${intervalMinutes} mins)`);
     
-    // 🔥 STEP 1: Send Immediately
+    // 🔥 STEP 1: Send Immediatel
     sendRandomMessage();
 
     // 🔥 STEP 2: Start Timer Loop
